@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support System</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body class="min-h-screen bg-gray-100">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-6">
+            <div class="flex items-center gap-2">
+                <i data-lucide="heart" class="w-8 h-8 text-blue-500"></i>
+                <h1 class="text-2xl font-bold">Mental Health Support</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="grid gap-8 md:grid-cols-2">
+            <div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">How are you feeling today?</h2>
+                    <div class="flex justify-between mb-6" id="mood-buttons">
+                        <button data-mood="very-happy" class="p-4 rounded-full hover:bg-gray-100">
+                            <i data-lucide="smile-plus" class="w-12 h-12"></i>
+                        </button>
+                        <button data-mood="happy" class="p-4 rounded-full hover:bg-gray-100">
+                            <i data-lucide="smile" class="w-12 h-12"></i>
+                        </button>
+                        <button data-mood="neutral" class="p-4 rounded-full hover:bg-gray-100">
+                            <i data-lucide="meh" class="w-12 h-12"></i>
+                        </button>
+                        <button data-mood="sad" class="p-4 rounded-full hover:bg-gray-100">
+                            <i data-lucide="frown" class="w-12 h-12"></i>
+                        </button>
+                        <button data-mood="very-sad" class="p-4 rounded-full hover:bg-gray-100">
+                            <i data-lucide="angry" class="w-12 h-12"></i>
+                        </button>
+                    </div>
+                    <textarea
+                        id="mood-note"
+                        placeholder="Would you like to add a note about how you're feeling?"
+                        class="w-full p-3 border rounded-lg mb-4 h-32 resize-none"
+                    ></textarea>
+                    <button
+                        id="save-mood"
+                        disabled
+                        class="w-full py-3 rounded-lg font-semibold bg-gray-200 text-gray-500 cursor-not-allowed"
+                    >
+                        Save Entry
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Coping Strategies</h2>
+                    <div class="grid gap-4">
+                        {% for strategy in strategies %}
+                        <div class="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i data-lucide="{{ strategy.category }}" class="w-6 h-6 text-blue-500"></i>
+                                <h3 class="font-semibold">{{ strategy.title }}</h3>
+                            </div>
+                            <p class="text-gray-600">{{ strategy.description }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if mood_entries %}
+        <div class="mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Your Mood History</h2>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="space-y-4">
+                    {% for entry in mood_entries %}
+                    <div class="border-b pb-4 last:border-b-0">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold capitalize">
+                                {{ entry.mood.replace('-', ' ') }}
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                            </span>
+                        </div>
+                        {% if entry.note %}
+                        <p class="text-gray-600">{{ entry.note }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
